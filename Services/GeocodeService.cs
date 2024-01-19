@@ -28,22 +28,36 @@ namespace Geocode.Services
 
         public async Task<GeocodeLookupResponse> KeywordLookup(string Keyword)
         {
-            using var scope = _context.CreateScope();
-            _log.LogInformation("Attempting to get required service at KeywordLookup");
-            var db = scope.GetRequiredService();
-
-            var data = await db.GeoData
-               .Where(x => x.City.Contains(Keyword) ||
-                 x.StateName == Keyword ||
-                 x.CountyName == Keyword ||
-                 x.Zip.ToString() == Keyword)
-               .Take(10)
-               .ToListAsync();
-            return new GeocodeLookupResponse()
+            try
             {
-                Data = data,
-                Success = true
-            };
+                using var scope = _context.CreateScope();
+                _log.LogInformation("Attempting to get required service at KeywordLookup");
+                var db = scope.GetRequiredService();
+                int keywordInt = 0;
+                int.TryParse(Keyword, out keywordInt);
+
+                var data = await db.GeoData
+                   .Where(x => x.City.Contains(Keyword) ||
+                     x.StateName == Keyword ||
+                     x.CountyName == Keyword ||
+                     x.Zip == keywordInt)
+                   .Take(10)
+                   .ToListAsync();
+                return new GeocodeLookupResponse()
+                {
+                    Data = data,
+                    Success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeocodeLookupResponse()
+                {
+                    Data = null,
+                    Success = false
+                };
+            }
+            
         }
 
         public async Task<GeocodeLookupResponse> LatLongLookup(double lat, double lng)
