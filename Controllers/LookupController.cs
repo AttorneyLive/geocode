@@ -56,5 +56,11 @@ namespace Geocode.Controllers
         {
             return await _geocode.LatLongLookup(lat, lng);
         }
+
+        [HttpGet("All")]
+        public async Task<GeocodeLookupResponse> GetAllGeoCodeData()
+        {
+            return await _geocode.GetAllGeoData();
+        }
     }
 }
