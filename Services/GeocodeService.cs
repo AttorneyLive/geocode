@@ -105,5 +105,29 @@ namespace Geocode.Services
                 Success = true
             };
         }
+
+        public async Task<GeocodeLookupResponse> GetAllGeoData()
+        {
+            using var scope = _context.CreateScope();
+            var db = scope.GetRequiredService();
+            var data = await db.GeoData
+                .Select(x=> new GeoData()
+                {
+                    Id = x.Id,
+                    Lat = x.Lat,
+                    Lng = x.Lng,
+                    City = x.City,
+                    StateId = x.StateId,
+                    Zip = x.Zip,
+                    StateName = x.StateName
+                })
+                .ToListAsync();
+
+            return new GeocodeLookupResponse()
+            {
+                Data = data,
+                Success = true
+            };
+        }
     }
 }
