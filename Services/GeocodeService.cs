@@ -26,6 +26,17 @@ namespace Geocode.Services
             return state;
         }
 
+        public async Task<IEnumerable<string>> GetStates()
+        {
+            using var scope = _context.CreateScope();
+            var db = scope.GetRequiredService();
+            _log.LogInformation("Attempting to get required service at GetStateByZip");
+
+            var states = db.GeoData.Select(x => x.StateName).Distinct();
+
+            return states.ToList();
+        }
+
         public async Task<GeocodeLookupResponse> KeywordLookup(string Keyword)
         {
             try
