@@ -64,7 +64,7 @@ namespace Geocode.Controllers
         }
 
         [HttpGet("States")]
-        public async Task<IEnumerable<string>> GetAllStates()
+        public async Task<IEnumerable<StateResponse>> GetAllStates()
         {
             return await _geocode.GetStates();
         }

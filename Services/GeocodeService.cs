@@ -26,13 +26,13 @@ namespace Geocode.Services
             return state;
         }
 
-        public async Task<IEnumerable<string>> GetStates()
+        public async Task<IEnumerable<StateResponse>> GetStates()
         {
             using var scope = _context.CreateScope();
             var db = scope.GetRequiredService();
             _log.LogInformation("Attempting to get required service at GetStateByZip");
 
-            var states = db.GeoData.Select(x => x.StateName).Distinct();
+            var states = db.GeoData.Select(x => new StateResponse() { StateName = x.StateName, StateId = x.StateId }).Distinct();
 
             return states.ToList();
         }
@@ -110,6 +110,20 @@ namespace Geocode.Services
             var db = scope.GetRequiredService();
 
             var data = await db.GeoData.Where(x => x.Zip == zipcode).ToListAsync();
+            return new GeocodeLookupResponse()
+            {
+                Data = data,
+                Success = true
+            };
+        }
+
+        public async Task<GeocodeLookupResponse> StatecodeLookup(string stateLookup)
+        {
+            using var scope = _context.CreateScope();
+            _log.LogInformation("Attempting to get required service at ZipcodeLookup");
+            var db = scope.GetRequiredService();
+
+            var data = await db.GeoData.Where(x => x.StateId == stateLookup).ToListAsync();
             return new GeocodeLookupResponse()
             {
                 Data = data,
