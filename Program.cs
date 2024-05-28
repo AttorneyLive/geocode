@@ -18,6 +18,12 @@ namespace Geocode
             builder.Host.UseSerilog((ctx, lc)
                                     => lc.ReadFrom.Configuration(ctx.Configuration));
 
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetConnectionString("Redis");
+                options.InstanceName = "geocode_";
+            });
+
             // Add services to the container.
             builder.Services.AddSingleton<IGeoDataImport, GeoDataImport>();
             builder.Services.AddSingleton<IGeocode, GeocodeService>();
