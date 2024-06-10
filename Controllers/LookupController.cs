@@ -51,6 +51,18 @@ namespace Geocode.Controllers
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
+        [HttpGet("State")]
+        public async Task<GeocodeLookupResponse> StatesLookup(string stateId)
+        {
+            _log.LogInformation("StatesLookup attempting for keyword: {@stateId}", stateId);
+            return await _geocode.StatecodeLookup(stateId);
+        }
+
+        /// <summary>
+        /// Returns all data matching provided keyword
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
         [HttpGet("LatLong")]
         public async Task<GeocodeLookupResponse> LatLongLookup(double lat, double lng)
         {

@@ -9,6 +9,9 @@ namespace Geocode.Interfaces
         Task<string> GetStateByZip(int zipcode);
         Task<IEnumerable<StateResponse>> GetStates();
         Task<GeocodeLookupResponse> LatLongLookup(double lat, double lng);
+
+        Task<GeocodeLookupResponse> StatecodeLookup(string stateLookup);
+
         Task<GeocodeLookupResponse> GetAllGeoData();
 
     }
